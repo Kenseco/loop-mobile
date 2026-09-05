@@ -1,67 +1,76 @@
-<img src="https://user-images.githubusercontent.com/2246121/282256557-1570674b-d142-4198-9740-69404cc6a339.png#gh-light-mode-only" width="100%" alt="Chat dashboard dark mode"/>
-<img src="https://user-images.githubusercontent.com/2246121/282256632-87f6a01b-6467-4e0e-8a93-7bbf66d03a17.png#gh-dark-mode-only" width="100%" alt="Chat dashboard"/>
+# Loop Mobile
 
----
+Agent app for the Loop customer-service platform (https://loop.axioagent.app).
+White-label fork of [chatwoot/chatwoot-mobile-app](https://github.com/chatwoot/chatwoot-mobile-app) — React Native + Expo, TypeScript.
 
-# Chatwoot
+- **Supported server version:** 4.1.0+ (`EXPO_PUBLIC_MINIMUM_CHATWOOT_VERSION`)
+- **Supported iOS versions:** 13.4+
+- **Supported Android versions:** 7.0+ (minSdk 24)
 
-Mobile app for chatwoot platform. Built with React Native and Expo.
+## What differs from upstream
 
-<p>
-   <a href="https://github.com/react-native-community/releases/blob/master/CHANGELOG.md"><img src="https://img.shields.io/github/package-json/dependency-version/chatwoot/chatwoot-mobile-app/react-native?color=%2361dafb" alt="Project Dependencies"></a>
-   <img src="https://img.shields.io/github/package-json/dependency-version/chatwoot/chatwoot-mobile-app/expo?color=%2361dafb" alt="Expo">
-  <img src="https://img.shields.io/discord/647412545203994635" alt="Discord">
-  <a href="https://discord.gg/cJXdrwS"><img src="https://img.shields.io/badge/chat-Discord-violet?logo=discord" alt="Chat on Discord"></a>
-   <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="Chat on Discord"></a>
- <img src="https://img.shields.io/github/license/chatwoot/chatwoot-mobile-app" alt="License">
-</p>
+Everything deployment-specific is concentrated in a few places so upstream can still be merged:
 
-- **Supported Chatwoot version:** 3.13.0+
-- **Supported iOS versions**: 13.4+
-- **Supported Android versions**: 6.0+
+| Area | Where |
+|---|---|
+| App name, bundle id (`app.axioagent.loop`), URL scheme (`loopapp`), deep-link host | `app.config.ts` |
+| Icon / adaptive icon / splash / login logo | `assets/`, `src/assets/images/logo.png` — regenerate with `branding/render-assets.js` |
+| Default server host, cloud-host list, help URL, client name | `src/constants/branding.ts` (overridable via `EXPO_PUBLIC_*`, see `.env.example`) |
+| URL scheme constant used by SSO / deep links | `APP_SCHEME` in `src/constants/index.ts` |
+| User-visible wording | `src/i18n/*.json` (5 keys per locale) |
+| Boomerang icon component | `src/svg-icons/common/Loop.tsx` |
 
-## Features
+Internal identifiers (`selectChatwootVersion`, `X-Chatwoot-*` request headers, `chatwoot-dashboard-app:*` postMessage protocol, `@chatwoot/*` npm packages) are intentionally left untouched — they are the server protocol, not branding.
 
-- Do not miss out on the new customers
-- Follow up on customer conversations on go
-- Reply easily with canned responses
-- Receive realtime notifications about system activities
-- Communicate with other team members via private notes
-- Assign statuses to your conversations
-  ... and more to come!
+## Setup
 
-## Download Android/iOS application
+```sh
+pnpm install
+cp .env.example .env        # fill in the values
+pnpm test                   # jest
+pnpm lint                   # eslint
+npx tsc --noEmit            # type check
+```
 
-<p >
-  <a href="https://apps.apple.com/app/id1495796682">
-    <img alt="Download on the App Store" title="App Store" src="http://i.imgur.com/0n2zqHD.png" width="140">
-  </a>
+### Push notifications
 
-  <a href="https://play.google.com/store/apps/details?id=com.chatwoot.app&hl=en">
-    <img alt="Get it on Google Play" title="Google Play" src="http://i.imgur.com/mtGRPuM.png" width="140">
-  </a>
-</p>
+The app uses Firebase Cloud Messaging on both platforms. Create a Firebase project, download
+`google-services.json` (Android) and `GoogleService-Info.plist` (iOS) into the repo root
+(both are git-ignored) and point `EXPO_PUBLIC_*_GOOGLE_SERVICES_FILE` at them.
 
-## Testing
+On the Loop server:
 
-To help with testing app updates before they're released, you can:
+1. Super admin → App Configs: set `FIREBASE_PROJECT_ID` and `FIREBASE_CREDENTIALS`
+   (service-account JSON of the same Firebase project).
+2. `.env`: `ENABLE_PUSH_RELAY_SERVER=false` — otherwise pushes are routed through Chatwoot's
+   relay, which only knows the official app.
 
-Sign up to be a beta tester
+### Regenerating brand assets
 
-- [Android](https://play.google.com/apps/testing/com.chatwoot.app) - Open this link from your Android device
-- [iOS](https://testflight.apple.com/join/yQ4yoSx4) - Open this link from your iOS device
+```sh
+cd branding
+npm i --no-save @resvg/resvg-js   # one-off, not part of the app
+node render-assets.js ..
+```
 
-You can leave the Beta testing program at any time:
+### Building
 
-- On Android, [click this link](https://play.google.com/apps/testing/com.chatwoot.app) while logged in with your Google Play email address used to opt-in for the Beta program, then click **Leave the program**.
-- On iOS, access the `Chatwoot` app page in TestFlight and click **Stop Testing**.
+EAS is configured in `eas.json`. `EXPO_PUBLIC_PROJECT_ID` is the EAS project id and
+`EXPO_PUBLIC_EXPO_OWNER` the Expo account that owns it.
 
-## Feedback & Contributing
+```sh
+pnpm build:android       # eas build -p android --profile production
+pnpm build:ios           # eas build -p ios --profile production
+```
 
-Feel free to send us feedback on [X](https://x.com/chatwootapp) or [file an issue](https://github.com/chatwoot/chatwoot-mobile-app/issues).
+## Keeping up with upstream
 
-If you wish to contribute, please take a quick look at the [CONTRIBUTING.md](https://www.chatwoot.com/docs/contributing-guide/mobile-app/setup-guide).
+```sh
+git remote add upstream https://github.com/chatwoot/chatwoot-mobile-app.git
+git fetch upstream
+git merge upstream/develop
+```
 
-If there's anything you'd like to chat about, please feel free to join our [Discord](https://discord.gg/cJXdrwS) chat!
+## License
 
-_Chatwoot_ &copy; 2017-2026, Chatwoot Inc - Released under the MIT License.
+MIT — see [LICENSE](LICENSE). Based on Chatwoot Mobile, © Chatwoot Inc.

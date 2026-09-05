@@ -15,7 +15,7 @@ import { switchAccount } from '@/utils/accountUtils';
 
 import { RecentSearches } from '@/screens/search/utils/recentSearches';
 import i18n from 'i18n';
-import { HELP_URL } from '@/constants/url';
+import { HELP_URL } from '@/constants/branding';
 import { openURL } from '@/utils/urlUtils';
 import { tailwind } from '@/theme';
 
@@ -33,7 +33,7 @@ import { UserAvatar } from './components/UserAvatar';
 
 import { LANGUAGES } from '@/constants';
 import { useRefsContext } from '@/context';
-import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
+import { LoopIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
 
 import { useHaptic, useTabBarHeight } from '@/utils';
@@ -233,23 +233,35 @@ const SettingsScreen = () => {
     },
   ];
 
+  // In-app support chat needs a widget token; docs need a help URL. Hide what isn't configured.
+  const isSupportChatConfigured =
+    !!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN && !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL;
+
   const supportList: GenericListType[] = [
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.READ_DOCS'),
-      icon: <SwitchIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: openHelpCenter,
-    },
-    {
-      hasChevron: true,
-      title: i18n.t('SETTINGS.CHAT_WITH_US'),
-      icon: <ChatwootIcon />,
-      subtitle: '',
-      subtitleType: 'light',
-      onPressListItem: () => toggleWidget(true),
-    },
+    ...(HELP_URL
+      ? [
+          {
+            hasChevron: true,
+            title: i18n.t('SETTINGS.READ_DOCS'),
+            icon: <SwitchIcon />,
+            subtitle: '',
+            subtitleType: 'light' as const,
+            onPressListItem: openHelpCenter,
+          },
+        ]
+      : []),
+    ...(isSupportChatConfigured
+      ? [
+          {
+            hasChevron: true,
+            title: i18n.t('SETTINGS.CHAT_WITH_US'),
+            icon: <LoopIcon />,
+            subtitle: '',
+            subtitleType: 'light' as const,
+            onPressListItem: () => toggleWidget(true),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -286,9 +298,11 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        <Animated.View style={tailwind.style('pt-6')}>
-          <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View>
+        {supportList.length > 0 && (
+          <Animated.View style={tailwind.style('pt-6')}>
+            <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
+          </Animated.View>
+        )}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"
@@ -334,19 +348,17 @@ const SettingsScreen = () => {
         <BottomSheetHeader headerText={i18n.t('SETTINGS.DEBUG_ACTIONS')} />
         <DebugActions />
       </Sheet>
-      {!!process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN &&
-        !!process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL &&
-        !!showWidget && (
-          <ChatWootWidget
-            websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
-            locale="en"
-            baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
-            closeModal={() => toggleWidget(false)}
-            isModalVisible={showWidget}
-            user={userDetails}
-            customAttributes={customAttributes}
-          />
-        )}
+      {isSupportChatConfigured && !!showWidget && (
+        <ChatWootWidget
+          websiteToken={process.env.EXPO_PUBLIC_CHATWOOT_WEBSITE_TOKEN}
+          locale="en"
+          baseUrl={process.env.EXPO_PUBLIC_CHATWOOT_BASE_URL}
+          closeModal={() => toggleWidget(false)}
+          isModalVisible={showWidget}
+          user={userDetails}
+          customAttributes={customAttributes}
+        />
+      )}
     </SafeAreaView>
   );
 };

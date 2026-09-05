@@ -196,7 +196,10 @@ export const URL_REGEX = {
   CONVERSATION: 'app/accounts/[-0-9]+/conversations/[-0-9]',
 };
 
-export const SSO_CALLBACK_URL = 'chatwootapp://auth/saml';
+// Custom URL scheme; must match `scheme` in app.config.ts
+export const APP_SCHEME = 'loopapp';
+
+export const SSO_CALLBACK_URL = `${APP_SCHEME}://auth/saml`;
 
 export const CONVERSATION_TOGGLE_STATUS = {
   open: 'RESOLVE',

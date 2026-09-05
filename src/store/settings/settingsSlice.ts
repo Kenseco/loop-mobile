@@ -3,6 +3,11 @@ import { settingsActions } from './settingsActions';
 import * as RootNavigation from '@/utils/navigationUtils';
 import { NotificationSettings } from './settingsTypes';
 import { Theme } from '@/types/common/Theme';
+import {
+  DEFAULT_INSTALLATION_HOST,
+  DEFAULT_INSTALLATION_URL,
+  DEFAULT_WEBSOCKET_URL,
+} from '@/constants/branding';
 
 interface SettingsState {
   baseUrl: string;
@@ -20,8 +25,8 @@ interface SettingsState {
   pushToken: string;
 }
 const initialState: SettingsState = {
-  baseUrl: 'app.chatwoot.com',
-  installationUrl: 'https://app.chatwoot.com/',
+  baseUrl: DEFAULT_INSTALLATION_HOST,
+  installationUrl: DEFAULT_INSTALLATION_URL,
   uiFlags: {
     isSettingUrl: false,
     isUpdating: false,
@@ -37,7 +42,7 @@ const initialState: SettingsState = {
     selected_push_flags: [],
     user_id: 0,
   },
-  webSocketUrl: 'wss://app.chatwoot.com/cable',
+  webSocketUrl: DEFAULT_WEBSOCKET_URL,
   theme: 'system',
   version: '',
   pushToken: '',

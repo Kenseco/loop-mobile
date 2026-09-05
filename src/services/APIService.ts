@@ -11,6 +11,7 @@ import { Platform } from 'react-native';
 import { getStore } from '@/store/storeAccessor';
 import I18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
+import { CLIENT_NAME } from '@/constants/branding';
 
 const nonAccountRoutes = [
   'profile',
@@ -29,7 +30,6 @@ const isForPreviousAccount = (url?: string): boolean => {
   );
 };
 
-const CLIENT_NAME = 'Chatwoot Mobile';
 const CLIENT_VERSION = Constants.expoConfig?.version ?? 'unknown';
 
 function deviceHeaders(): Record<string, string> {
