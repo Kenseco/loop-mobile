@@ -11,7 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     scheme: 'loopapp',
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'app.axioagent.loop',
+      bundleIdentifier: 'loop.liencreate.com',
       infoPlist: {
         NSCameraUsageDescription:
           'This app requires access to the camera to upload images and videos.',
@@ -30,7 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     android: {
       adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#6366F1' },
-      package: 'app.axioagent.loop',
+      package: 'loop.liencreate.com',
       permissions: [
         'android.permission.CAMERA',
         'android.permission.RECORD_AUDIO',

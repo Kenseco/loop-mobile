@@ -13,7 +13,7 @@ Everything deployment-specific is concentrated in a few places so upstream can s
 
 | Area | Where |
 |---|---|
-| App name, bundle id (`app.axioagent.loop`), URL scheme (`loopapp`), deep-link host | `app.config.ts` |
+| App name, bundle id (`loop.liencreate.com`), URL scheme (`loopapp`), deep-link host | `app.config.ts` |
 | Icon / adaptive icon / splash / login logo | `assets/`, `src/assets/images/logo.png` — regenerate with `branding/render-assets.js` |
 | Default server host, cloud-host list, help URL, client name | `src/constants/branding.ts` (overridable via `EXPO_PUBLIC_*`, see `.env.example`) |
 | URL scheme constant used by SSO / deep links | `APP_SCHEME` in `src/constants/index.ts` |
