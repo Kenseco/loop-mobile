@@ -88,14 +88,20 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'react-native-permissions',
         { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary', 'Notifications'] },
       ],
-      [
-        '@sentry/react-native',
-        {
-          url: 'https://sentry.io/',
-          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
-          organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
-        },
-      ],
+      // The Sentry plugin injects a source-map upload step into the native builds
+      // that fails without an org/project, so it is only registered when configured.
+      ...(process.env.EXPO_PUBLIC_SENTRY_ORG_NAME && process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME
+        ? [
+            [
+              '@sentry/react-native',
+              {
+                url: 'https://sentry.io/',
+                project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
+                organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
+              },
+            ] as [string, Record<string, string>],
+          ]
+        : []),
       'expo-web-browser',
       '@react-native-community/datetimepicker',
       '@react-native-firebase/app',
