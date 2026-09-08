@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
 import { isCloudInstallation } from '@/constants/branding';
+import { resolveDeviceLocale } from '@/i18n/deviceLocale';
 
 export const selectSettings = (state: RootState) => state.settings;
 
@@ -9,9 +10,11 @@ export const selectInstallationUrl = createSelector(
   settings => settings.installationUrl,
 );
 
-export const selectLocale = createSelector(selectSettings, settings =>
-  settings.localeValue === 'zh' ? 'zh_CN' : settings.localeValue,
-);
+// Until the user picks a language explicitly, follow the device language.
+export const selectLocale = createSelector(selectSettings, settings => {
+  const locale = settings.uiFlags.isLocaleSet ? settings.localeValue : resolveDeviceLocale();
+  return locale === 'zh' ? 'zh_CN' : locale;
+});
 
 export const selectIsLocaleSet = createSelector(
   selectSettings,
