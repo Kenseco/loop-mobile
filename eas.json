@@ -6,16 +6,43 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_PROJECT_ID": "1923724e-8532-480e-b2aa-ec3c329270b0",
+        "EXPO_PUBLIC_EXPO_OWNER": "kenseco266",
+        "EXPO_PUBLIC_APP_SLUG": "loop-mobile",
+        "EXPO_PUBLIC_MINIMUM_CHATWOOT_VERSION": "4.1.0",
+        "EXPO_PUBLIC_DEFAULT_INSTALLATION_HOST": "loop.axioagent.app"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_PROJECT_ID": "1923724e-8532-480e-b2aa-ec3c329270b0",
+        "EXPO_PUBLIC_EXPO_OWNER": "kenseco266",
+        "EXPO_PUBLIC_APP_SLUG": "loop-mobile",
+        "EXPO_PUBLIC_MINIMUM_CHATWOOT_VERSION": "4.1.0",
+        "EXPO_PUBLIC_DEFAULT_INSTALLATION_HOST": "loop.axioagent.app"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_PROJECT_ID": "1923724e-8532-480e-b2aa-ec3c329270b0",
+        "EXPO_PUBLIC_EXPO_OWNER": "kenseco266",
+        "EXPO_PUBLIC_APP_SLUG": "loop-mobile",
+        "EXPO_PUBLIC_MINIMUM_CHATWOOT_VERSION": "4.1.0",
+        "EXPO_PUBLIC_DEFAULT_INSTALLATION_HOST": "loop.axioagent.app"
+      }
     }
   },
   "submit": {
     "production": {
       "android": {
-        "track": "internal" // (enum: production, beta, alpha, internal)
+        "track": "internal"
       }
     }
   }
