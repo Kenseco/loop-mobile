@@ -29,7 +29,7 @@ describe('app.config.ts', () => {
   it('is branded as Loop', () => {
     expect(config.name).toBe('Loop');
     expect(config.scheme).toBe('loopapp');
-    expect(config.ios?.bundleIdentifier).toBe('loop.liencreate.com');
+    expect(config.ios?.bundleIdentifier).toBe('com.lien-create.loop');
     expect(config.android?.package).toBe('loop.liencreate.com');
     expect(config.ios?.associatedDomains).toEqual(['applinks:loop.axioagent.app']);
   });

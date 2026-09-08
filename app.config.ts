@@ -11,7 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     scheme: 'loopapp',
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'loop.liencreate.com',
+      bundleIdentifier: 'com.lien-create.loop',
       infoPlist: {
         NSCameraUsageDescription:
           'This app requires access to the camera to upload images and videos.',
