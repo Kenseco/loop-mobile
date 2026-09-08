@@ -50,6 +50,15 @@ const DashboardScreen = () => {
     data,
   )}}));`;
 
+  // Dashboard apps ask for their context with `window.parent.postMessage(...)`.
+  // Inside a WebView `parent === window`, so that request never reaches the app;
+  // forward it so the context is re-sent once the app has attached its listener.
+  const FORWARD_FETCH_INFO = `window.addEventListener('message', function (e) {
+    if (e.data === 'chatwoot-dashboard-app:fetch-info' && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(e.data);
+    }
+  }); true;`;
+
   return (
     <Animated.View style={tailwind.style('flex-1')}>
       <Animated.View
@@ -81,6 +90,7 @@ const DashboardScreen = () => {
         source={{ uri: url }}
         startInLoadingState={true}
         javaScriptEnabled={true}
+        injectedJavaScriptBeforeContentLoaded={FORWARD_FETCH_INFO}
         onLoadEnd={() => {
           webviewRef.current?.injectJavaScript(INJECTED_JAVASCRIPT);
         }}
